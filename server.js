@@ -9,7 +9,7 @@ mongodb.connect('mongodb://qlin22:Linqiao970613!@chatsimple-shard-00-00.koy2c.mo
     socketcl.on('connection', function(socket){
         let chat = db.collection('chats')
         //chat.remove()
-        chat.find().limit(10).sort({_id:1})
+        chat.find().limit(12).sort({_id:1})
         .toArray(function(err, res){
             if(err){
                 throw err
@@ -24,9 +24,7 @@ mongodb.connect('mongodb://qlin22:Linqiao970613!@chatsimple-shard-00-00.koy2c.mo
                 chat.insert({name:name,message:message,date:date},function(){
                     socketcl.emit('output',[data])
                 })
-            }
-            
-            
+            } 
         })
         
     })
