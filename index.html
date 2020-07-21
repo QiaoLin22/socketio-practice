@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>chatsimple</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h1 class="text-center">
+                    chatsimple
+                    <button id = "logout" class="btn btn-danger">Log out</button>
+                </h1>
+                <div id="status"></div>
+                <div id="chat">
+                    <input type="text" id = "username"
+                    class="form-control" placeholder="Enter Name">
+                   
+                    <div class="card">
+                        <div id = "messages" class="card-block">
+
+                        </div>
+                    </div>
+                    
+                    <textarea id = "textarea" class="form-control" placeholder="Enter message"></textarea>
+                </div>
+                <button id = "postbutton", class = "btn btn-primary">Post</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script>
+        const messages = document.getElementById('messages')
+        const textarea = document.getElementById('textarea')
+        const username = document.getElementById('username')
+        const postbutton = document.getElementById('postbutton')
+        const socket = io.connect('http://127.0.0.1:4000')
+        if(socket !== undefined){
+                console.log('Connected to socket...');
+                socket.on('output', function(data){
+                    if(data.length){
+                        data.forEach(element => {
+                            var message = document.createElement('div')
+                            var messagenamedate = document.createElement('div')
+                            var messagems = document.createElement('div')
+                            messagenamedate.classList.add('element1')
+                            messagems.classList.add('element2')
+                            messagenamedate.innerText = element.name+"   at    "+element.date.slice(0,10)+" "+element.date.slice(12,19)+":"
+                            messagems.innerText = element.message
+                            message.appendChild(messagenamedate)
+                            message.appendChild(messagems)
+                            message.classList.add('chat-message')
+                            message.classList.add('message-card')
+                            message.classList.add('card')
+                            
+                            //message.innerText = element.name+" "+"at"+" "+element.date+":"+ "\n"+element.message
+                            
+                            messages.appendChild(message)
+                        });
+                    }
+                });
+                postbutton.addEventListener('click', () =>{
+                    
+                    socket.emit('input', {
+                        name:username.value,
+                        message:textarea.value,
+                        date: new Date()
+                    });
+                })
+            }
+    </script>
+</body>
+</html>
