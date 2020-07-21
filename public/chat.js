@@ -29,7 +29,7 @@ const messages = document.getElementById('messages')
                 });
                 postbutton.addEventListener('click', () =>{
                     
-                    socket.emit('input', {
+                    socket.emit('chat', {
                         name:username.value,
                         message:textarea.value,
                         date: new Date()
