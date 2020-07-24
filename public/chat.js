@@ -1,7 +1,9 @@
-const messages = document.getElementById('messages')
+        const messages = document.getElementById('messages')
         const textarea = document.getElementById('textarea')
         const username = document.getElementById('username')
         const postbutton = document.getElementById('postbutton')
+        const clearbutton = document.getElementById('clearbutton')
+        
         const socket = io.connect('http://127.0.0.1:4000')
         if(socket !== undefined){
                 console.log('Connected to socket...');
@@ -20,9 +22,6 @@ const messages = document.getElementById('messages')
                             message.classList.add('chat-message')
                             message.classList.add('message-card')
                             message.classList.add('card')
-                            
-                            //message.innerText = element.name+" "+"at"+" "+element.date+":"+ "\n"+element.message
-                            
                             messages.appendChild(message)
                         });
                     }
@@ -35,4 +34,11 @@ const messages = document.getElementById('messages')
                         date: new Date()
                     });
                 })
+                clearbutton.addEventListener('click', function(){
+                    socket.emit('clear');
+                });
+
+                socket.on('cleared', function(){
+                    messages.textContent = '';
+                });
             }
